@@ -1,6 +1,6 @@
 """
 Source: https://github.com/explosion/spaCy/blob/master/examples/deep_learning_keras.py
-Author: 
+Author: Explosion AI 
 This example shows how to use an LSTM sentiment classification model trained using Keras in spaCy. spaCy splits the document into sentences, and each sentence is classified using the LSTM. The scores for the sentences are then aggregated to give the document score. This kind of hierarchical model is quite difficult in "pure" Keras or Tensorflow, but it's very effective. The Keras example on this dataset performs quite poorly, because it cuts off the documents so that they're a fixed size. This hurts review accuracy a lot, because people often summarise their rating in the final sentence
 Prerequisites:
 spacy download en_vectors_web_lg
