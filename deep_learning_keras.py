@@ -117,19 +117,19 @@ def compile_lstm(embeddings, shape, settings):
     model = Sequential()
     model.add(
         Embedding(
-            embeddings.shape[0],
-            embeddings.shape[1],
-            input_length=shape['max_length'],
-            trainable=False,
-            weights=[embeddings],
+            embeddings.shape[0], # input_dim/max_features/vocab_size
+            embeddings.shape[1], # output_dim/dense_embedding_dim/embed_size
+            input_length=shape['max_length'], # max_sentence_length/time_steps/sequence_number
+            trainable=False, # don't train spaCy
+            weights=[embeddings], # use spaCy's weight
             mask_zero=True
         )
-    )
-    model.add(TimeDistributed(Dense(shape['nr_hidden'], use_bias=False)))
+    )  # Embedding(vocab_size,embed_size,words), input_array=[batchsize,words], output_array=[batchsize,words,embed_size], the output is just a word sequence matrix
+    model.add(TimeDistributed(Dense(shape['nr_hidden'], use_bias=False))) 
     model.add(Bidirectional(LSTM(shape['nr_hidden'],
                                  recurrent_dropout=settings['dropout'],
                                  dropout=settings['dropout'])))
-    model.add(Dense(shape['nr_class'], activation='sigmoid'))
+    model.add(Dense(shape['nr_class'], activation='sigmoid')) # shape['nr_class']=1
     model.compile(optimizer=Adam(lr=settings['lr']), loss='binary_crossentropy',
 		  metrics=['accuracy'])
     return model
@@ -165,7 +165,7 @@ def read_data(data_dir, limit=0):
     return zip(*examples) # Unzips into two lists
 
 
-@plac.annotations(
+@plac.annotations( # passes these args from commandline
     train_dir=("Location of training file or directory"),
     dev_dir=("Location of development file or directory"),
     model_dir=("Location of output model directory",),
@@ -220,4 +220,4 @@ def main(model_dir=None, train_dir=None, dev_dir=None,
 
 
 if __name__ == '__main__':
-plac.call(main)
+    plac.call(main)
